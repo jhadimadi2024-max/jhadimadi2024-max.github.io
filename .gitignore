@@ -4,11 +4,18 @@ dist/
 coverage/
 .DS_Store
 *.log
-.env*
+
+# Environment variables files
+.env
 .env.local
+.env.development.local
+.env.production.local
+.env*.local
+.env*
 !.env.example
 
 # Runtime secrets / production-generated state
 data/admin_credentials.json
 data/.admin_secret
 data/*.runtime.json
+

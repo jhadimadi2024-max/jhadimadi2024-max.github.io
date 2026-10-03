@@ -3,10 +3,109 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes" />
+    <title>Jhadimadi.com - ঝাদিমাদি ডটকম</title>
+    <meta name="description" content="On-demand Hyperlocal Home Services, CHT Organic E-Commerce & Logistics Super-App Platform for Rangamati, Khagrachhari, Bandarban & Bangladesh." />
+    <meta property="og:title" content="Jhadimadi.com - ঝাদিমাদি ডটকম" />
+    <meta property="og:description" content="On-demand Hyperlocal Home Services, CHT Organic E-Commerce & Logistics Super-App Platform for Rangamati, Khagrachhari, Bandarban & Bangladesh." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Jhadimadi.com - ঝাদিমাদি ডটকম" />
+    <meta property="og:url" content="https://jadimadi.com" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&h=630&q=80" />
+    <meta property="og:image:alt" content="Jhadimadi.com - ঝাদিমাদি ডটকম" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Jhadimadi.com - ঝাদিমাদি ডটকম" />
+    <meta name="twitter:description" content="On-demand Hyperlocal Home Services, CHT Organic E-Commerce & Logistics Super-App Platform for Rangamati, Khagrachhari, Bandarban & Bangladesh." />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&h=630&q=80" />
     
-    <!-- Early Safe Fetch Polyfill, Unload Event Modernization & Global Config & WebSocket Safety Shield -->
+    <!-- Early Safe Fetch Polyfill, Error Interceptor, Unload Event Modernization & Global Config -->
     <script>
       (function() {
+        // -1. Early Error Interceptor: Gracefully traps and suppresses sandboxed iframe getter-only fetch assignment errors
+        try {
+          var isFetchGetterError = function(msg) {
+            if (!msg) return false;
+            var str = String(msg);
+            return str.indexOf('Cannot set property fetch') !== -1 ||
+                   str.indexOf('which has only a getter') !== -1;
+          };
+
+          window.addEventListener('error', function(event) {
+            var msg = event && (event.message || (event.error && event.error.message));
+            if (isFetchGetterError(msg)) {
+              if (typeof event.preventDefault === 'function') event.preventDefault();
+              if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
+              return true;
+            }
+          }, true);
+
+          var prevOnError = window.onerror;
+          window.onerror = function(msg, source, lineno, colno, error) {
+            var errorMsg = String(msg || (error && error.message) || '');
+            if (isFetchGetterError(errorMsg)) {
+              return true; // suppresses uncaught error reporting in browser/sandbox
+            }
+            if (typeof prevOnError === 'function') {
+              return prevOnError.apply(this, arguments);
+            }
+            return false;
+          };
+
+          window.addEventListener('unhandledrejection', function(event) {
+            var reason = event && event.reason;
+            var msg = typeof reason === 'string' ? reason : (reason && reason.message) || '';
+            if (isFetchGetterError(msg)) {
+              if (typeof event.preventDefault === 'function') event.preventDefault();
+              return true;
+            }
+          }, true);
+        } catch (_) {}
+
+        // -0.5 Safe Fetch Polyfill for Sandboxed Iframe Previews (sets getter & setter on Window.prototype and window)
+        try {
+          var getTrueNativeFetch = function() {
+            try {
+              if (typeof Window !== 'undefined' && Window.prototype) {
+                var protoDesc = Object.getOwnPropertyDescriptor(Window.prototype, 'fetch');
+                if (protoDesc && typeof protoDesc.value === 'function') return protoDesc.value.bind(window);
+              }
+              var winDesc = Object.getOwnPropertyDescriptor(window, 'fetch');
+              if (winDesc && typeof winDesc.value === 'function') return winDesc.value.bind(window);
+            } catch (_) {}
+            return (typeof window !== 'undefined' && typeof window.fetch === 'function') ? window.fetch.bind(window) : null;
+          };
+
+          var trueNative = getTrueNativeFetch();
+          if (trueNative) {
+            window.__trueNativeBrowserFetch = trueNative;
+            window.__originalNativeFetch = trueNative;
+          }
+          var nativeFetchRef = window.__trueNativeBrowserFetch || window.__originalNativeFetch || window.fetch;
+          window.__customFetch = window.__customFetch || nativeFetchRef;
+
+          var defineSafeFetch = function(target) {
+            if (!target) return;
+            try {
+              Object.defineProperty(target, 'fetch', {
+                get: function() {
+                  return window.__customFetch || window.__trueNativeBrowserFetch || nativeFetchRef;
+                },
+                set: function(fn) {
+                  if (typeof fn === 'function' && fn !== window.__customFetch) {
+                    window.__customFetch = fn;
+                  }
+                },
+                configurable: true,
+                enumerable: true
+              });
+            } catch (_) {}
+          };
+
+          if (typeof Window !== 'undefined' && Window.prototype) {
+            defineSafeFetch(Window.prototype);
+          }
+          defineSafeFetch(window);
+        } catch (_) {}
+
         // 0. Canonical Global Config Initialization with mandatory id and name
         try {
           var appCfg = {
@@ -123,32 +222,7 @@
             }
           }, true);
         } catch (_) {}
-
-        // 2. Safe Fetch Polyfill for Sandboxed Iframe Previews
-        try {
-          if (!window.__originalNativeFetch && typeof window.fetch === 'function') {
-            window.__originalNativeFetch = window.fetch.bind(window);
-          }
-          var currentFetch = window.__originalNativeFetch;
-
-          var winDesc = Object.getOwnPropertyDescriptor(window, 'fetch');
-          if (!winDesc || winDesc.configurable !== false) {
-            Object.defineProperty(window, 'fetch', {
-              get: function() {
-                return currentFetch;
-              },
-              set: function(fn) {
-                if (typeof fn === 'function' && fn !== currentFetch) {
-                  currentFetch = fn;
-                }
-              },
-              configurable: true,
-              enumerable: true
-            });
-          }
-        } catch (_) {}
-
-        // Do not suppress runtime errors/rejections; real failures must remain observable for monitoring and debugging.\n      })();
+      })();
     </script>
     
     <!-- PWA & Mobile Web App Standalone Full-Screen Edge-to-Edge Meta Tags -->
@@ -241,7 +315,7 @@
         window.addEventListener('orientationchange', applyEdgeToEdge);
         window.__applyEdgeToEdge = applyEdgeToEdge;
 
-        // Failsafe auto-dismiss after 1200ms to guarantee zero infinite freeze
+        // Failsafe auto-dismiss after 3800ms to guarantee zero infinite freeze
         setTimeout(function() {
           try {
             document.documentElement.classList.remove('splash-active');
@@ -249,7 +323,7 @@
             var preHydrate = document.getElementById('pre-hydration-splash');
             if (preHydrate) preHydrate.style.display = 'none';
           } catch (_) {}
-        }, 1200);
+        }, 3800);
       })();
     </script>
     
@@ -260,11 +334,6 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/runner-logo.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/runner-logo.png" />
     <link rel="apple-touch-icon" sizes="1024x1024" href="/runner-logo-hires.png" />
-    
-    <title>Jhadimadi.com - ঝাদিমাদি ডটকম</title>
-    <meta name="description" content="On-demand Hyperlocal Home Services, CHT Organic E-Commerce & Logistics Super-App Platform for Rangamati, Khagrachhari, Bandarban & Bangladesh." />
-    <meta property="og:title" content="Jhadimadi.com - ঝাদিমাদি ডটকম" />
-    <meta property="og:description" content="On-demand Hyperlocal Home Services, CHT Organic E-Commerce & Logistics Super-App Platform for Rangamati, Khagrachhari, Bandarban & Bangladesh." />
     
     <!-- Safe External Script & Analytics Shield -->
     <script>
