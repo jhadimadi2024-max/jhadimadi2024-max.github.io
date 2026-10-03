@@ -1465,11 +1465,6 @@ async function startServer() {
   ].filter(Boolean);
 
   const DEFAULT_ADMIN_PASSWORDS = [
-    'Admin@jhadimadi2024',
-    'admin123456',
-    'admin123',
-    'Admin@123',
-    '123456',
     (process.env.ADMIN_PASSCODE || '').trim(),
     (process.env.ADMIN_PASSWORD || '').trim()
   ].filter(Boolean);
@@ -1477,7 +1472,7 @@ async function startServer() {
   const defaultAdminUsername = (process.env.ADMIN_USERNAME || 'admin').trim();
   const defaultAdminEmail = (process.env.ADMIN_EMAIL || 'admin@jhadimadi.com').trim().toLowerCase();
   const defaultAdminPhone = (process.env.ADMIN_PHONE || '01870592699').trim();
-  const defaultAdminPassword = (process.env.ADMIN_PASSCODE || process.env.ADMIN_PASSWORD || 'Admin@jhadimadi2024').trim();
+  const defaultAdminPassword = (process.env.ADMIN_PASSCODE || process.env.ADMIN_PASSWORD || '').trim();
 
   const adminAccountsRegistry: Record<string, {
     email: string;
@@ -2784,7 +2779,10 @@ async function startServer() {
     try {
       const defaultUser = process.env.ADMIN_USERNAME || 'admin';
       const defaultMail = (process.env.ADMIN_EMAIL || 'admin@jhadimadi.com').trim().toLowerCase();
-      const defaultPass = (process.env.ADMIN_PASSCODE || process.env.ADMIN_PASSWORD || 'Admin@jhadimadi2024').trim();
+      const defaultPass = (process.env.ADMIN_PASSCODE || process.env.ADMIN_PASSWORD || '').trim();
+      if (!defaultPass) {
+        return res.status(503).json({ success: false, message: 'Server admin password is not configured.' });
+      }
       const defaultPhone = (process.env.ADMIN_PHONE || '01870592699').trim();
       const defaultHash = hashPassword(defaultPass);
 
@@ -2844,7 +2842,7 @@ async function startServer() {
           alternativeUsername: 'jhadimadi',
           email: defaultMail,
           password: defaultPass,
-          alternativePassword: 'admin123456',
+          alternativePassword: '',
         }
       });
     } catch (err: any) {

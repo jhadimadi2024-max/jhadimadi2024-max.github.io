@@ -5,22 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
+    "build": "vite build",
     "start": "node dist/server.cjs",
     "preview": "vite preview",
     "seed:admin": "tsx scripts/seed-admin.ts",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "security:audit": "node scripts/security-audit.mjs"
+    "security:audit": "node scripts/security-audit.mjs",
+    "build:server": "esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
+    "build:full": "npm run build && npm run build:server",
+    "start:server": "node dist/server.cjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
     "@supabase/supabase-js": "^2.115.0",
     "@tailwindcss/vite": "^4.1.14",
-    "@types/bcryptjs": "^3.0.0",
     "@vitejs/plugin-react": "^5.0.4",
     "bcryptjs": "^3.0.3",
-    "cloudinary": "^2.11.0",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "lucide-react": "^0.546.0",
